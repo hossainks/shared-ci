@@ -1,18 +1,7 @@
-name: Coverage Check Reusable Workflow
+name: Generate Baseline Coverage
 
 on:
   workflow_call:
-    inputs:
-      threshold:
-        description: "Minimum percentage increase required"
-        required: false
-        default: 5
-        type: number
-      high_coverage_limit:
-        description: "If new coverage >= this limit, skip delta check"
-        required: false
-        default: 95
-        type: number
     secrets:
       GITHUB_TOKEN:
         required: true
