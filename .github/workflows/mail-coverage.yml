@@ -1,0 +1,42 @@
+name: Coverage Check Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      threshold:
+        description: "Minimum percentage increase required"
+        required: false
+        default: 5
+        type: number
+      high_coverage_limit:
+        description: "If new coverage >= this limit, skip delta check"
+        required: false
+        default: 95
+        type: number
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  coverage-delta-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Jest with coverage
+        run: npx jest --coverage --coverageReporters=json-summary
+
+      - name: Upload baseline coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-coverage
+          path: coverage/coverage-summary.json
